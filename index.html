@@ -1,0 +1,54 @@
+    <!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Weather App</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="loading-overlay">
+      <div class="loader"></div>
+    </div>
+    <div class="container">
+      <header>
+        <h1>WEATHER APP</h1>
+        <div class="location-and-units">
+          <div class="location-manager">
+            <input type="text" id="location-input" placeholder="Enter a city" />
+            <button id="add-location-btn">Add Location</button>
+          </div>
+          <div class="locations">
+            <select id="saved-locations"></select>
+          </div>
+          <div class="units">
+            <button id="celsius-btn" class="unit-btn active">°C</button>
+            <button id="fahrenheit-btn" class="unit-btn">°F</button>
+          </div>
+        </div>
+      </header>
+      <main>
+        <section class="current-weather">
+          <h2 id="current-location"></h2>
+          <div class="weather-details">
+            <p id="current-temp"></p>
+            <p id="current-conditions"></p>
+            <img id="current-icon" src="" alt="Weather icon" />
+          </div>
+        </section>
+        <section class="hourly-forecast">
+          <h2>Hourly Forecast</h2>
+          <div id="hourly-container" class="forecast-container"></div>
+        </section>
+        <section class="daily-forecast">
+          <h2>5-Day Forecast</h2>
+          <div id="daily-container" class="forecast-container"></div>
+        </section>
+        <div class="footer"></div>
+          Designed and Developed by Vicky Narvare © 2025 All rights reserved.
+        </div>
+      </main>
+    </div>
+    <script src="main.js"></script>
+  </body>
+</html>
