@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Weather App</title>
     <link rel="stylesheet" href="style.css" />
+    <link rel="manifest" href="manifest.json" />
+    <meta name="theme-color" content="#005a9c" />
+    <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png" />
+    <link rel="apple-touch-icon" href="icon-192.png" />
   </head>
   <body>
     <div id="loading-overlay">
@@ -17,23 +21,48 @@
           <div class="location-manager">
             <input type="text" id="location-input" placeholder="Enter a city" />
             <button id="add-location-btn">Add Location</button>
+            <button id="auto-location-btn" title="Use my location">📍</button>
           </div>
           <div class="locations">
             <select id="saved-locations"></select>
           </div>
-          <div class="units">
-            <button id="celsius-btn" class="unit-btn active">°C</button>
-            <button id="fahrenheit-btn" class="unit-btn">°F</button>
+          <div class="controls">
+            <div class="units">
+              <button id="celsius-btn" class="unit-btn active">°C</button>
+              <button id="fahrenheit-btn" class="unit-btn">°F</button>
+            </div>
+            <div class="theme-controls">
+              <button id="theme-toggle" class="control-btn" title="Toggle theme">🌙</button>
+              <button id="language-toggle" class="control-btn" title="Language">🌐</button>
+              <button id="notifications-toggle" class="control-btn" title="Notifications">🔔</button>
+              <button id="favorites-toggle" class="control-btn" title="Favorites">⭐</button>
+              <button id="settings-toggle" class="control-btn" title="Settings">⚙️</button>
+            </div>
           </div>
         </div>
       </header>
       <main>
         <section class="current-weather">
           <h2 id="current-location"></h2>
+          <div id="weather-alerts" class="weather-alerts hidden"></div>
           <div class="weather-details">
             <p id="current-temp"></p>
             <p id="current-conditions"></p>
             <img id="current-icon" src="" alt="Weather icon" />
+          </div>
+          <div class="additional-info">
+            <div class="info-item">
+              <span>Feels like</span>
+              <span id="feels-like"></span>
+            </div>
+            <div class="info-item">
+              <span>Humidity</span>
+              <span id="humidity"></span>
+            </div>
+            <div class="info-item">
+              <span>Wind</span>
+              <span id="wind"></span>
+            </div>
           </div>
         </section>
         <section class="hourly-forecast">
@@ -43,6 +72,235 @@
         <section class="daily-forecast">
           <h2>5-Day Forecast</h2>
           <div id="daily-container" class="forecast-container"></div>
+        </section>
+
+        <section class="weather-comparison">
+          <h2>Weather Comparison</h2>
+          <div class="comparison-controls">
+            <select id="city1-select">
+              <option value="">Select City 1</option>
+            </select>
+            <select id="city2-select">
+              <option value="">Select City 2</option>
+            </select>
+            <button id="compare-btn">Compare</button>
+          </div>
+          <div id="comparison-container" class="hidden"></div>
+        </section>
+
+        <section class="air-quality">
+          <h2>Air Quality & UV Index</h2>
+          <div id="air-quality-container" class="air-quality-grid">
+            <div class="aqi-card">
+              <h3>Air Quality Index</h3>
+              <div id="aqi-value" class="aqi-value">--</div>
+              <div id="aqi-status" class="aqi-status">Loading...</div>
+            </div>
+            <div class="uv-card">
+              <h3>UV Index</h3>
+              <div id="uv-value" class="uv-value">--</div>
+              <div id="uv-status" class="uv-status">Loading...</div>
+            </div>
+            <div class="sun-times">
+              <h3>Sun Times</h3>
+              <div class="sun-info">
+                <div>🌅 <span id="sunrise">--:--</span></div>
+                <div>🌇 <span id="sunset">--:--</span></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="weather-stats">
+          <h2>Weather Statistics</h2>
+          <div class="stats-controls">
+            <button id="temp-trend-btn" class="stat-btn active">Temperature Trend</button>
+            <button id="humidity-trend-btn" class="stat-btn">Humidity Trend</button>
+            <button id="pressure-trend-btn" class="stat-btn">Pressure Trend</button>
+          </div>
+          <div id="stats-chart" class="stats-chart">
+            <canvas id="weather-chart" width="400" height="200"></canvas>
+          </div>
+        </section>
+
+        <section class="voice-weather">
+          <h2>Voice Commands</h2>
+          <div class="voice-controls">
+            <button id="voice-btn" class="voice-btn">🎤 Ask Weather</button>
+            <div id="voice-status" class="voice-status">Click to start voice command</div>
+          </div>
+        </section>
+
+        <section class="weather-sharing">
+          <h2>Share Weather</h2>
+          <div class="sharing-controls">
+            <button id="share-twitter" class="share-btn">🐦 Twitter</button>
+            <button id="share-facebook" class="share-btn">📘 Facebook</button>
+            <button id="copy-weather" class="share-btn">📋 Copy Link</button>
+            <button id="screenshot-btn" class="share-btn">📸 Screenshot</button>
+          </div>
+        </section>
+
+        <section class="weather-trivia">
+          <h2>Weather Trivia</h2>
+          <div id="trivia-container" class="trivia-container">
+            <div id="trivia-fact" class="trivia-fact">Click refresh to learn something new!</div>
+            <button id="refresh-trivia" class="trivia-btn">🔄 New Fact</button>
+          </div>
+        </section>
+
+        <section class="weather-radar">
+          <h2>Weather Radar & Satellite</h2>
+          <div class="radar-controls">
+            <button id="radar-btn" class="radar-btn active">🌧️ Radar</button>
+            <button id="satellite-btn" class="radar-btn">🛰️ Satellite</button>
+            <button id="clouds-btn" class="radar-btn">☁️ Clouds</button>
+            <button id="temperature-map-btn" class="radar-btn">🌡️ Temperature</button>
+          </div>
+          <div id="radar-container" class="radar-container">
+            <div id="radar-display" class="radar-display">
+              <canvas id="radar-canvas" width="400" height="300"></canvas>
+            </div>
+          </div>
+        </section>
+
+        <section class="smart-recommendations">
+          <h2>Smart Weather Recommendations</h2>
+          <div id="recommendations-container" class="recommendations-container">
+            <div class="recommendation-card">
+              <h3>🧥 Clothing Suggestion</h3>
+              <div id="clothing-rec" class="rec-content">Loading...</div>
+            </div>
+            <div class="recommendation-card">
+              <h3>🚗 Travel Advisory</h3>
+              <div id="travel-rec" class="rec-content">Loading...</div>
+            </div>
+            <div class="recommendation-card">
+              <h3>🏃 Activity Suggestion</h3>
+              <div id="activity-rec" class="rec-content">Loading...</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="weather-gaming">
+          <h2>Weather Games</h2>
+          <div class="gaming-controls">
+            <button id="weather-quiz-btn" class="game-btn">🧠 Weather Quiz</button>
+            <button id="weather-memory-btn" class="game-btn">🃏 Memory Game</button>
+            <button id="weather-prediction-btn" class="game-btn">🔮 Predict Tomorrow</button>
+          </div>
+          <div id="game-container" class="game-container hidden">
+            <div id="game-content" class="game-content"></div>
+            <div id="game-score" class="game-score">Score: 0</div>
+          </div>
+        </section>
+
+        <section class="ar-weather">
+          <h2>AR Weather Experience</h2>
+          <div class="ar-controls">
+            <button id="ar-camera-btn" class="ar-btn">📱 AR Camera</button>
+            <button id="ar-compass-btn" class="ar-btn">🧭 Weather Compass</button>
+            <button id="ar-overlay-btn" class="ar-btn">👓 Weather Overlay</button>
+          </div>
+          <div id="ar-container" class="ar-container hidden">
+            <video id="ar-video" class="ar-video" autoplay playsinline></video>
+            <div id="ar-overlay" class="ar-overlay"></div>
+          </div>
+        </section>
+
+        <section class="weather-analytics">
+          <h2>Weather Analytics Dashboard</h2>
+          <div class="analytics-tabs">
+            <button id="trends-tab" class="analytics-tab active">📈 Trends</button>
+            <button id="patterns-tab" class="analytics-tab">🔄 Patterns</button>
+            <button id="insights-tab" class="analytics-tab">💡 Insights</button>
+          </div>
+          <div id="analytics-content" class="analytics-content">
+            <div class="analytics-grid">
+              <div class="analytics-card">
+                <h3>Temperature Variance</h3>
+                <div id="temp-variance" class="analytics-value">±5.2°C</div>
+              </div>
+              <div class="analytics-card">
+                <h3>Humidity Trend</h3>
+                <div id="humidity-trend" class="analytics-value">↗️ +12%</div>
+              </div>
+              <div class="analytics-card">
+                <h3>Weather Stability</h3>
+                <div id="weather-stability" class="analytics-value">78%</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="weather-chatbot">
+          <h2>Weather Assistant</h2>
+          <div id="chatbot-container" class="chatbot-container">
+            <div id="chat-messages" class="chat-messages">
+              <div class="bot-message">
+                <span class="bot-avatar">🤖</span>
+                <div class="message-content">Hi! I'm your weather assistant. Ask me anything about the weather!</div>
+              </div>
+            </div>
+            <div class="chat-input-container">
+              <input type="text" id="chat-input" placeholder="Ask about weather..." />
+              <button id="chat-send" class="chat-send-btn">Send</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="weather-calendar">
+          <h2>Weather Calendar</h2>
+          <div class="calendar-controls">
+            <button id="prev-month" class="calendar-nav">‹</button>
+            <span id="current-month" class="current-month">December 2025</span>
+            <button id="next-month" class="calendar-nav">›</button>
+          </div>
+          <div id="weather-calendar-grid" class="calendar-grid">
+            <!-- Calendar will be generated by JavaScript -->
+          </div>
+        </section>
+
+        <section class="weather-social">
+          <h2>Weather Community</h2>
+          <div class="social-tabs">
+            <button id="posts-tab" class="social-tab active">📝 Posts</button>
+            <button id="photos-tab" class="social-tab">📸 Photos</button>
+            <button id="reports-tab" class="social-tab">📊 Reports</button>
+          </div>
+          <div id="social-content" class="social-content">
+            <div class="post-composer">
+              <textarea id="post-text" placeholder="Share your weather experience..."></textarea>
+              <button id="share-post" class="share-post-btn">Share</button>
+            </div>
+            <div id="social-feed" class="social-feed">
+              <!-- Social posts will be generated here -->
+            </div>
+          </div>
+        </section>
+
+        <section class="offline-cache">
+          <h2>Offline Weather Cache</h2>
+          <div class="cache-controls">
+            <button id="cache-current" class="cache-btn">💾 Cache Current</button>
+            <button id="cache-favorites" class="cache-btn">⭐ Cache Favorites</button>
+            <button id="clear-cache" class="cache-btn">🗑️ Clear Cache</button>
+          </div>
+          <div id="cache-status" class="cache-status">
+            <div class="cache-info">
+              <span>Cached Locations: <span id="cached-count">0</span></span>
+              <span>Last Updated: <span id="cache-time">Never</span></span>
+            </div>
+          </div>
+        </section>
+
+        <section class="historical-data">
+          <h2>Historical Data</h2>
+          <div class="date-selector">
+            <input type="date" id="historical-date" />
+            <button id="load-historical">Load Data</button>
+          </div>
+          <div id="historical-container" class="hidden"></div>
         </section>
         <div class="footer"></div>
           Designed and Developed by Vicky Narvare © 2025 All rights reserved.
